@@ -178,5 +178,56 @@ class Board:
 
         return score
     
-    
+    class AI:
+    def  _init_(self, depth=4):
+        self.depth = max(1, min(depth, 6))
+
+    def minimax(self, board: Board, depth, alpha, beta, maximizingPlayer):
+        valid_locations = board.get_valid_locations()
+        is_terminal = board.winning_move(PLAYER_PIECE) or board.winning_move(AI_PIECE) or board.is_full()
+
+        if depth == 0 or is_terminal:
+            if is_terminal:
+                if board.winning_move(AI_PIECE):
+                    return (None, 10**6)
+                elif board.winning_move(PLAYER_PIECE):
+                    return (None, -10**6)
+                else:  # draw
+                    return (None, 0)
+            else:
+                return (None, board.score_position(AI_PIECE))
+
+        if maximizingPlayer:
+            value = -math.inf
+            best_col = random.choice(valid_locations) if valid_locations else None
+            for col in valid_locations:
+                board.drop_piece(col, AI_PIECE)
+                new_score = self.minimax(board, depth-1, alpha, beta, False)[1]
+                board.undo_move(col)
+                if new_score > value:
+                    value = new_score
+                    best_col = col
+                alpha = max(alpha, value)
+                if alpha >= beta:
+                    break
+            return best_col, value
+        else:
+            value = math.inf
+            best_col = random.choice(valid_locations) if valid_locations else None
+            for col in valid_locations:
+                board.drop_piece(col, PLAYER_PIECE)
+                new_score = self.minimax(board, depth-1, alpha, beta, True)[1]
+                board.undo_move(col)
+                if new_score < value:
+                    value = new_score
+                    best_col = col
+                beta = min(beta, value)
+                if alpha >= beta:
+                    break
+            return best_col, value
+
+    def pick_best_move(self, board: Board):
+        col, score = self.minimax(board, self.depth, -math.inf, math.inf, True)
+        return col
+
 >>>>>>> main
