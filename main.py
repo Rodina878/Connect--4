@@ -110,4 +110,35 @@ class Board:
             score -= 80
 
         return score
-    
+       def score_position(self, piece):
+        score = 0
+        b = self.grid
+
+        center_col = COLS // 2
+        center_count = [b[r][center_col] for r in range(ROWS)].count(piece)
+        score += center_count * 6
+
+        # horizontal
+        for r in range(ROWS):
+            row_array = [b[r][c] for c in range(COLS)]
+            for c in range(COLS-3):
+                window = row_array[c:c+4]
+                score += self._evaluate_window(window, piece)
+
+        for c in range(COLS):
+            col_array = [b[r][c] for r in range(ROWS)]
+            for r in range(ROWS-3):
+                window = col_array[r:r+4]
+                score += self._evaluate_window(window, piece)
+
+        for r in range(ROWS-3):
+            for c in range(COLS-3):
+                window = [b[r+i][c+i] for i in range(4)]
+                score += self._evaluate_window(window, piece)
+
+        for r in range(ROWS-3):
+            for c in range(COLS-3):
+                window = [b[r+3-i][c+i] for i in range(4)]
+                score += self._evaluate_window(window, piece)
+
+        return score
