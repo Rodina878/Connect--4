@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 
-=======
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 import random
@@ -145,6 +143,7 @@ class Board:
                 score += self._evaluate_window(window, piece)
 
         return score
+    
         def score_position(self, piece):
         score = 0
         b = self.grid
@@ -230,4 +229,4 @@ class Board:
         col, score = self.minimax(board, self.depth, -math.inf, math.inf, True)
         return col
 
->>>>>>> main
+
