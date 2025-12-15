@@ -177,5 +177,6 @@ class Board:
                 score += self._evaluate_window(window, piece)
 
         return score
-
+    
+    
 >>>>>>> main
